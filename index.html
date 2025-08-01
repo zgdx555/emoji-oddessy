@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Vibes Storyteller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Anime-inspired background and theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000a29;
+            color: #e0f2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden; /* Hide scrollbars for the animation */
+            position: relative;
+        }
+
+        /* Moving background animation */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #2a0a48 0%, transparent 40%),
+                        linear-gradient(135deg, #2a0a48 0%, #000a29 50%, #33ff57 100%),
+                        radial-gradient(circle at 100% 100%, #33ff57 0%, transparent 60%);
+            background-size: 300% 300%;
+            animation: moveBackground 25s linear infinite alternate;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        @keyframes moveBackground {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(51, 255, 87, 0.3);
+            border: 1px solid rgba(51, 255, 87, 0.6);
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .anime-title {
+            font-family: 'Bebas Neue', sans-serif;
+            text-shadow: 0 0 10px #33ff57, 0 0 20px #33ff57, 0 0 30px #33ff57;
+            color: #e0f2fe;
+            animation: neonPulse 2s infinite alternate;
+        }
+
+        @keyframes neonPulse {
+            from { text-shadow: 0 0 5px #33ff57, 0 0 10px #33ff57; }
+            to { text-shadow: 0 0 10px #33ff57, 0 0 20px #33ff57, 0 0 40px #33ff57; }
+        }
+
+        .input-box {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(51, 255, 87, 0.4);
+            border-radius: 10px;
+            padding: 12px 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #33ff57;
+            box-shadow: 0 0 12px #33ff57;
+        }
+
+        .btn {
+            background: #33ff57;
+            color: #1a082e;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 20px rgba(51, 255, 87, 0.6);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(51, 255, 87, 0.8);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 15px rgba(51, 255, 87, 0.6);
+        }
+
+        .story-output {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(51, 255, 87, 0.4);
+            border-radius: 10px;
+            padding: 20px;
+            white-space: pre-wrap;
+            min-height: 150px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #33ff57;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .emoji-picker-container {
+            display: none;
+            height: 200px;
+            overflow-y: scroll;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(51, 255, 87, 0.4);
+            box-shadow: inset 0 0 10px rgba(51, 255, 87, 0.2);
+            position: relative;
+        }
+
+        .emoji-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            gap: 10px;
+            user-select: none;
+        }
+
+        .emoji-picker-grid span {
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .emoji-picker-grid span:hover {
+            transform: scale(1.2);
+        }
+
+        .close-emoji-picker {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ff3333;
+            transition: color 0.2s;
+        }
+
+        .close-emoji-picker:hover {
+            color: #ff8888;
+        }
+
+        /* Swish-slow intro animation */
+        #intro .text-2xl {
+            opacity: 0;
+            transform: translateY(30px) translateX(-20px) scale(0.9);
+            animation: swishIn 1.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; /* Smoother easing */
+            animation-delay: 0.5s;
+        }
+        #intro p {
+            opacity: 0;
+            transform: translateY(30px) translateX(20px) scale(0.9);
+            animation: swishIn 1.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; /* Smoother easing */
+            animation-delay: 1s; /* Increased delay for "swish-slow" effect */
+        }
+
+        @keyframes swishIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9) blur(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) translateX(0) scale(1) blur(0);
+            }
+        }
+    </style>
+</head>
+<body class="selection:bg-[#33ff57] selection:text-[#1a082e]">
+
+    <div class="container">
+        <h1 class="text-4xl md:text-5xl text-center anime-title mb-4">EMOJI ODYSSEY</h1>
+
+        <div id="intro" class="text-center my-8 p-4 bg-transparent border-none">
+            <div class="text-2xl mb-2">🤖 <span class="text-[#33ff57]">Unit 77:</span> says:</div>
+            <p class="text-lg leading-relaxed text-gray-300">
+                Data input is now online. This system translates your glyphs into a narrative, interpreting the collective subconscious of the current generation. Initiate the prompt with any emoji string to begin the transmission. Your story awaits.
+            </p>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-6 items-center">
+            <input type="text" id="emojiInput" placeholder="Type or select your glyphs..." class="input-box flex-grow text-lg md:text-xl placeholder-gray-500 text-gray-100">
+            <button id="toggleEmojiPickerBtn" class="btn text-lg md:text-xl">
+                Select Glyphs
+            </button>
+            <button id="generateBtn" class="btn text-lg md:text-xl">
+                Start Transmission
+            </button>
+        </div>
+
+        <div id="emojiPickerContainer" class="emoji-picker-container">
+            <span id="closeEmojiPicker" class="close-emoji-picker">&times;</span>
+            <div id="emojiGrid" class="emoji-picker-grid"></div>
+        </div>
+
+        <div id="loading" class="loading-spinner"></div>
+
+        <div id="storyOutput" class="story-output text-lg leading-relaxed">
+            </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const emojiInput = document.getElementById('emojiInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const toggleEmojiPickerBtn = document.getElementById('toggleEmojiPickerBtn');
+            const closeEmojiPickerBtn = document.getElementById('closeEmojiPicker');
+            const emojiPickerContainer = document.getElementById('emojiPickerContainer');
+            const emojiGrid = document.getElementById('emojiGrid');
+            const storyOutput = document.getElementById('storyOutput');
+            const loadingSpinner = document.getElementById('loading');
+
+            // The API key is integrated here.
+            const API_KEY = "AIzaSyBR5CMO5xPuiHj4yWccfbEopyXhpHy76wg"; // This is the API key from your original code
+
+            // A deduplicated list of emojis for the picker
+            const emojis = [
+                "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "😘", "😗", "😙", "😚", "😋", "😜", "🤪", "😝", "😛", "🤑", "🤗", "🤭", "🤫", "🤔", "🤨", "😐", "😑", "😶", "😶‍🌫️", "😏", "😒", "🙄", "😬", "😮", "🤥", "😔", "😪", "🤤", "😴", "😷", "🤒", "🤕", "🤢", "🤮", "🤧", "🥵", "🥶", "🥴", "😵", "🤯", "🤠", "🥳", "🥸", "😎", "🤓", "🧐", "😕", "😟", "🙁", "☹️", "😯", "😲", "😳", "🥺", "😦", "😧", "😨", "😰", "😥", "😢", "😭", "😱", "😖", "😣", "😩", "😫", "🥱", "😤", "😡", "😠", "🤬", "😈", "👿", "💀", "👻", "👽", "👾", "🤖", "😺", "😸", "😹", "😻", "😼", "😽", "😾", "😿", "🙀", "🙈", "🙉", "🙊", "🤎", "💜", "💙", "💚", "💛", "🧡", "❤️", "🖤", "🤍", "💔", "❤️‍🔥", "💯", "💢", "💥", "💫", "✨", "🌟", "⚡", "🔥", "☄️", "🌈", "☀️", "☁️", "💧", "🌊", "❄️", "🧊", "🏝️", "💨", "🍂", "🍃", "🍄", "🌳", "🌲", "🌱", "🌺", "🌸", "🌷", "🌹", "🌻", "🌼", "🌿", "🌾", "🦋", "🐛", "🐝", "🐞", "🐜", "🕷️", "🕸️", "🐌", "🦑", "🦐", "🦞", "🦀", "🐡", "🐠", "🐟", "🐬", "🐳", "🐋", "🦈", "🐊", "🐅", "🐆", "🦓", "🦍", "🐘", "🐪", "🦒", "🦌", "🐂", "🐃", "🐄", "🐎", "🐖", "🐏", "🐑", "🐐", "🐓", "🐔", "🕊️", "🦢", "🦆", "🦉", "🐸", "🐍", "🐲", "🐉", "🦕", "🦖", "🐾", "🐈", "🐩", "🐕", "🐕‍🦺", "🐈‍⬛", "🐀", "🐭", "🐹", "🐇", "🐿️", "🦔", "🦡", "🐨", "🦥", "🦦", "🦨", "🦘", "🦙", "🦚", "🦜", "🦩", "🦃", "🐣", "🐥", "🐧", "🦤", "🐦", "🦅", "🐢", "🦎", "⚽", "🏀", "🏈", "⚾", "🥎", "🏐", "🎾", "🏓", "🏸", "🥅", "🏒", "🏑", "🏏", "🥍", "🏹", "🎣", "🥊", "🥋", "⛸️", "🎿", "🏂", "⛷️", "🤸", "🏋️", "🤼", "🤾", "🏌️", "🏇", "🏄", "🏊", "🤽", "🚣", "🤺", "🤹", "🧘", "🧗", "🎭", "🎨", "🎤", "🎧", "🎷", "🎸", "🎹", "🎺", "🎻", "🥁", "🎬", "🎮", "🕹️", "🎰", "🎲", "🎯", "🎳", "🧩", "♟️", "♠️", "♥️", "♦️", "♣️", "💎", "💍", "👑", "🎩", "👒", "🎓", "🧢", "⛑️", "🪖", "🎒", "👝", "👛", "👜", "💼", "🛍️", "🎁", "🎀", "🎈", "🎊", "🎉", "🎃", "🎄", "🎋", "🎎", "🏮", "🧧", "✉️", "📧", "📩", "📨", "💌", "📮", "🗳️", "✏️", "✒️", "🖋️", "🖊️", "🖌️", "🖍️", "📏", "📐", "✂️", "📌", "📍", "📎", "🖇️", "📝", "🗒️", "🗓️", "📆", "📅", "📇", "📈", "📉", "📊", "🧾", "📦", "📫", "📪", "📬", "📭", "🏷️", "🔖", "📃", "📜", "📄", "📰", "🗞️", "📖", "📚", "📁", "📂", "🗂️", "📋", "🗃️", "🗄️", "🗑️", "🔒", "🔓", "🔏", "🔐", "🔑", "🗝️", "🔨", "🪓", "⛏️", "⚒️", "🛠️", "🔧", "🔩", "⚙️", "🔗", "⛓️", "⚖️", "🛡️", "⚔️", "🗡️", "🔪", "🔫", "🏺", "🧭", "🗺️", "🛢️", "⛽", "🚨", "🚥", "🚦", "🚧", "🛑", "🔔", "🔕", "📣", "📢", "🔊", "🔉", "🔈", "📻", "🎙️", "🎶", "🎵", "🪕", "🪘", "🪇", "🪈"
+            ].filter((value, index, self) => self.indexOf(value) === index);
+
+            // Function to render the emoji grid dynamically
+            const renderEmojiGrid = () => {
+                emojiGrid.innerHTML = '';
+                emojis.forEach(emoji => {
+                    const span = document.createElement('span');
+                    span.textContent = emoji;
+                    span.addEventListener('click', () => {
+                        emojiInput.value += emoji;
+                        emojiInput.focus();
+                    });
+                    emojiGrid.appendChild(span);
+                });
+            };
+
+            // Event listener to toggle emoji picker visibility
+            toggleEmojiPickerBtn.addEventListener('click', () => {
+                emojiPickerContainer.style.display = emojiPickerContainer.style.display === 'grid' ? 'none' : 'grid';
+                emojiInput.focus();
+            });
+
+            // Event listener to close the emoji picker
+            closeEmojiPickerBtn.addEventListener('click', () => {
+                emojiPickerContainer.style.display = 'none';
+            });
+
+            // --- MODIFIED: Function to check if a string contains ONLY emojis and spaces ---
+            function containsOnlyEmojis(text) {
+                // This regex now strictly checks for characters with the Emoji property (including various forms like emoji presentation, pictographs, etc.)
+                // combined with basic whitespace. If any character doesn't fit this, it returns false.
+                const strictEmojiRegex = /^(\p{Emoji}|\s)+$/u;
+                return strictEmojiRegex.test(text);
+            }
+            // --- END MODIFIED ---
+
+            // Main function to generate the story
+            generateBtn.addEventListener('click', async () => {
+                const inputText = emojiInput.value.trim();
+
+                if (inputText === "") {
+                    storyOutput.innerHTML = '<span class="text-red-400">Error: No glyphs detected. System requires input. ⚠️</span>';
+                    return;
+                }
+
+                // --- NEW: Emoji Input Validation (Stricter) ---
+                if (!containsOnlyEmojis(inputText)) {
+                    storyOutput.innerHTML = `
+                        <p class="text-red-400">
+                            Seriously? 🙄 This ain't a chat app, bestie. <br>
+                            Only pure glyphs, zero extra baggage. Try again or get ratio'd. 🚫
+                        </p>
+                    `;
+                    return; // Stop execution if input is not emojis/spaces
+                }
+                // --- END NEW ---
+
+                // Show loading spinner and clear previous story
+                loadingSpinner.style.display = 'block';
+                storyOutput.innerHTML = '';
+                generateBtn.disabled = true;
+
+                // --- MODIFIED PROMPT FOR SHORTER, MEANINGFUL STORY ---
+                const prompt = `You are a Gen Z slang expert with a cool, cyberpunk/anime aesthetic. Write a **short and highly engaging story** (max 5-7 sentences) based on the following emojis: ${inputText}. The story should have a **clear, meaningful takeaway or a thought-provoking twist at the end**, like a profound moment in an anime. Use modern Gen Z slang naturally. The vibe should be sci-fi or fantasy anime.`;
+                console.log("Prompting Gemini with:", prompt);
+                // --- END MODIFIED PROMPT ---
+
+                try {
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+                    let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                    const payload = { contents: chatHistory };
+
+                    let response, result;
+                    for (let i = 0; i < 3; i++) { // Exponential backoff with 3 retries
+                        try {
+                            response = await fetch(apiUrl, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+
+                            if (response.ok) {
+                                result = await response.json();
+                                break; // Success, exit loop
+                            } else {
+                                console.warn(`API call failed with status ${response.status}. Retrying...`);
+                                // Wait before retrying (exponential backoff)
+                                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000 + Math.random() * 500)); // Added random jitter
+                            }
+                        } catch (error) {
+                            console.warn(`Attempt ${i + 1} failed:`, error);
+                            await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000 + Math.random() * 500)); // Wait even on network error
+                        }
+                    }
+
+                    if (!response || !response.ok) {
+                        const errorData = response ? await response.json() : 'No response';
+                        console.error('API call failed after multiple retries. Last error:', errorData);
+                        storyOutput.innerHTML = '<span class="text-red-400">Error: Could not process narrative data. The system is probably buggin\' out. Try again later, fam. 😭</span>';
+                    } else if (result.candidates && result.candidates.length > 0 &&
+                                result.candidates[0].content && result.candidates[0].content.parts &&
+                                result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        storyOutput.textContent = text;
+                    } else {
+                        console.error("API response structure unexpected:", result);
+                        storyOutput.innerHTML = '<span class="text-red-400">Error: The narrative data is corrupted. This is not a drill! 👾</span>';
+                    }
+
+                } catch (error) {
+                    console.error('An unexpected error occurred:', error);
+                    storyOutput.innerHTML = '<span class="text-red-400">Looks like the server is acting up. Try again later, bestie. 💅</span>';
+                } finally {
+                    loadingSpinner.style.display = 'none';
+                    generateBtn.disabled = false; // Re-enable the button regardless of success or failure.
+                }
+            });
+
+            // Initial call to render the emoji grid when the page loads
+            renderEmojiGrid();
+        });
+    </script>
+</body>
+</html>
