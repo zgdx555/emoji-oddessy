@@ -39,14 +39,14 @@ go live on html path - no installation required
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+![Emojify Interface1](img/epic.png)
+*KudumbAISree interface*
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+![AI Speech Loading](img/epic2.png)
+*AI speech loading*
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+![AI Speech and Voice Output](img/epic4.png)
+*AI speech and voice output*
 
 ### Project Demo
 # Video
