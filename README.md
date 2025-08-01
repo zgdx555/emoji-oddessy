@@ -42,10 +42,10 @@ For Software:
 ![Emojify Interface1](epic.png)
 *Emojify Interface1*
 
-![Emojify_Interface2](epic2.png)
+![Emojify_Interface2](epic2.jpg)
 *Emojify Interface2*
 
-![Emojify Interface3](epic4.png)
+![Emojify Interface3](epic4.jpg)
 *Emojify Interface3*
 
 ### Project Demo
