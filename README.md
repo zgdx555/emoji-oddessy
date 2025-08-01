@@ -40,10 +40,10 @@ For Software:
 
 # Screenshots (Add at least 3)
 ![Emojify Interface1]()
-*its budgy and unpredictable*
+**
 
 ![Emojify_Interface2](epic2.jpg)
-*Emojify Interface*
+*its budgy and unpredictable*
 
 ![Emojify Interface3](Epic4.jpg)
 *Emojify Interface *
