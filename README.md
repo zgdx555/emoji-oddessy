@@ -5,7 +5,7 @@
 
 
 ## Basic Details
-### Team Name: Team Oddysey
+### Team Name: optibots
 
 
 ### Team Members
