@@ -39,14 +39,14 @@ go live on html path - no installation required
 For Software:
 
 # Screenshots (Add at least 3)
-![Emojify Interface1](epic.png)
-*Emojify Interface1*
+![Emojify Interface1]()
+*its budgy and unpredictable*
 
 ![Emojify_Interface2](epic2.jpg)
-*Emojify Interface2*
+*Emojify Interface*
 
-![Emojify Interface3](epic4.jpg)
-*Emojify Interface3*
+![Emojify Interface3](Epic4.jpg)
+*Emojify Interface *
 
 ### Project Demo
 # Video
